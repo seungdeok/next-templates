@@ -3,15 +3,33 @@ import { useInput } from './useInput';
 
 const INPUT_TEST_ID = 'input';
 const BUTTON_TEST_ID = 'reset';
+const MSG_TEST_ID = 'msg';
 const INITIAL_VALUE = '';
 const UPDATED_VALUE = 'UPDATE TEXT';
+const ERROR_MSG = 'Too long';
 
 const TestComponent = () => {
-  const [text, onChange, reset] = useInput(INITIAL_VALUE);
+  const validateTest = (value: string) => {
+    if (value.length > 5) {
+      return { success: false, msg: ERROR_MSG };
+    }
+    return { success: true };
+  };
+
+  const [text, errorMsg, onChange, onBlur, reset] = useInput(
+    INITIAL_VALUE,
+    validateTest,
+  );
 
   return (
     <div>
-      <input data-testid={INPUT_TEST_ID} value={text} onChange={onChange} />
+      <input
+        data-testid={INPUT_TEST_ID}
+        value={text}
+        onBlur={onBlur}
+        onChange={onChange}
+      />
+      {errorMsg && <p data-testid={MSG_TEST_ID}>{errorMsg}</p>}
       <button data-testid={BUTTON_TEST_ID} type="button" onClick={reset}>
         Reset
       </button>
@@ -19,7 +37,7 @@ const TestComponent = () => {
   );
 };
 
-describe('useInput', () => {
+describe('[unit] useInput', () => {
   it('Returns initial value correctly', () => {
     const { getByTestId } = render(<TestComponent />);
     const input = getByTestId(INPUT_TEST_ID) as HTMLInputElement;
@@ -31,6 +49,17 @@ describe('useInput', () => {
     const input = getByTestId(INPUT_TEST_ID) as HTMLInputElement;
     fireEvent.change(input, { target: { value: UPDATED_VALUE } });
     expect(input.value).toBe(UPDATED_VALUE);
+  });
+
+  it('Updates text value with onBlur correctly', () => {
+    const { getByTestId } = render(<TestComponent />);
+    const input = getByTestId(INPUT_TEST_ID) as HTMLInputElement;
+
+    fireEvent.change(input, { target: { value: UPDATED_VALUE } });
+    fireEvent.blur(input, {});
+
+    const p = getByTestId(MSG_TEST_ID) as HTMLInputElement;
+    expect(p.textContent).toBe(ERROR_MSG);
   });
 
   it('Resets text value with reset correctly', () => {

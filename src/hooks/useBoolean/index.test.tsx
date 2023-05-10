@@ -26,7 +26,7 @@ const TestComponent = () => {
   );
 };
 
-describe('useBoolean', () => {
+describe('[unit] useBoolean', () => {
   it('Returns initial value correctly', () => {
     const { getByTestId } = render(<TestComponent />);
     const p = getByTestId(LABEL_TEST_ID) as HTMLInputElement;

@@ -2,6 +2,7 @@ import Head from 'next/head';
 
 interface Props {
   title?: string;
+  canonicalUrl?: string;
   description?: string;
   keywords?: string;
   isIndexing?: boolean;
@@ -13,6 +14,7 @@ interface Props {
 
 export const Helmet = ({
   title = 'Next Templates',
+  canonicalUrl = '',
   isIndexing = false,
   isFollowing = false,
   description,
@@ -24,6 +26,7 @@ export const Helmet = ({
   return (
     <Head>
       <title>{title}</title>
+      <meta name="canonical" content={canonicalUrl} />
       {description !== undefined && (
         <meta name="description" content={description} />
       )}
@@ -35,6 +38,7 @@ export const Helmet = ({
       {ogImageUrl !== undefined && (
         <meta property="og:image" content={ogImageUrl} />
       )}
+      <meta name="author" content="seungdeok[jeong9132@gmail.com]" />
       <meta
         name="robots"
         content={`${isIndexing ? 'index' : 'noindex'},${
