@@ -1,3 +1,3 @@
-export * from './email';
-export * from './password';
-export * from './name';
+export * from './validateName';
+export * from './validatePassword';
+export * from './validateEmail';
